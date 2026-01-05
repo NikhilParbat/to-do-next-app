@@ -1,7 +1,7 @@
 "use client";
 
 import { Todo } from "@/lib/types";
-import { useTodoStore } from "@/store/TodoStore";
+import { useTodoStore } from "@/store/todoStore";
 
 export default function TodoItem({ todo }: { todo: Todo }) {
   const toggleTodo = useTodoStore((state) => state.toggleTodo);

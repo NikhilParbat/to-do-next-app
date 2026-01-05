@@ -1,17 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useTodoStore } from "@/store/TodoStore";
+import { useTodoStore } from "@/store/todoStore";
 
 export default function TodoInput() {
   const [text, setText] = useState("");
   const addTodo = useTodoStore((state) => state.addTodo);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!text.trim()) return;
 
-    addTodo(text);
+    await addTodo(text);
     setText("");
   }
 

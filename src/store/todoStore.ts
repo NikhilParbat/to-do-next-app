@@ -3,37 +3,75 @@ import { Todo } from "@/lib/types"
 
 type TodoStore = {
   todos: Todo[]
-  addTodo: (title: string) => void
-  toggleTodo: (id: string) => void
-  deleteTodo: (id: string) => void
+  fetchTodos: () => Promise<void>
+  addTodo: (title: string) => Promise<void>
+  toggleTodo: (id: number) => Promise<void>
+  deleteTodo: (id: number) => Promise<void>
 }
 
 export const useTodoStore = create<TodoStore>((set) => ({
   todos: [],
 
-  addTodo: (title) =>
-    set((state) => ({
-      todos: [
-        ...state.todos,
-        {
-          id: crypto.randomUUID(),
-          title,
-          completed: false,
-        },
-      ],
-    })),
+  fetchTodos: async () => {
+  const res = await fetch("/api/todos");
 
-  toggleTodo: (id) =>
-    set((state) => ({
-      todos: state.todos.map((todo) =>
-        todo.id === id
-          ? { ...todo, completed: !todo.completed }
-          : todo
-      ),
-    })),
+  if (!res.ok) {
+    console.error("Failed to fetch todos");
+    return;
+  }
 
-  deleteTodo: (id) =>
-    set((state) => ({
-      todos: state.todos.filter((todo) => todo.id !== id),
-    })),
+  const text = await res.text();
+
+  if (!text) {
+    console.error("Empty response from /api/todos");
+    return;
+  }
+
+  const data = JSON.parse(text);
+  set({ todos: data });
+},
+
+addTodo: async (title) => {
+  const res = await fetch("/api/todos", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title }),
+  });
+
+  if (!res.ok) {
+    console.error("Failed to add todo");
+    return;
+  }
+
+  const getRes = await fetch("/api/todos");
+
+  if (!getRes.ok) {
+    console.error("Failed to refetch todos");
+    return;
+  }
+
+  const data = await getRes.json();
+  set({ todos: data });
+},
+
+
+  toggleTodo: async (id) => {
+    await fetch(`/api/todos/${id}`, {
+      method: "PATCH",
+    })
+
+    const res = await fetch("/api/todos")
+    const data = await res.json()
+    set({ todos: data })
+  },
+
+  deleteTodo: async (id) => {
+    await fetch(`/api/todos/${id}`, {
+      method: "DELETE",
+    })
+
+    const res = await fetch("/api/todos")
+    const data = await res.json()
+    set({ todos: data })
+  },
 }))
