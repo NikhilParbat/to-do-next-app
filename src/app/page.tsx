@@ -14,7 +14,7 @@ export default function Home() {
         <TodoList />
 
         <div className="mt-4 text-center">
-          <Link href="/stats" className="text-blue-600 hover:underline">
+          <Link href="/stats" className="text-purple-600 hover:underline">
             View Stats
           </Link>
         </div>
