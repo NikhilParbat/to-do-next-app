@@ -16,14 +16,14 @@ export const useTodoStore = create<TodoStore>((set) => ({
   const res = await fetch("/api/todos");
 
   if (!res.ok) {
-    console.error("Failed to fetch todos");
+    console.log("Failed to fetch todos");
     return;
   }
 
   const text = await res.text();
 
   if (!text) {
-    console.error("Empty response from /api/todos");
+    console.log("Empty response from /api/todos");
     return;
   }
 

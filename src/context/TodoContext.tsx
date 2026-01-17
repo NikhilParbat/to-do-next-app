@@ -5,8 +5,8 @@ import { Todo } from "@/lib/types";
 
 type Action =
   | { type: "ADD"; payload: Todo }
-  | { type: "TOGGLE"; payload: string }
-  | { type: "DELETE"; payload: string };
+  | { type: "TOGGLE"; payload: number }
+  | { type: "DELETE"; payload: number };
 
 type TodoContextType = {
   todos: Todo[];
